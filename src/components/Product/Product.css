@@ -1,0 +1,20 @@
+.product{
+    display: flex;
+    border-bottom: 1px solid lightgrey;
+    margin-bottom: 10px;
+    padding: 10px;
+}
+.specification{
+    display: flex;
+}
+.product-description{
+    padding: 20px;
+}
+.addCartButton{
+    background-color: gold;
+    height:30px;
+    width:200px;
+    border: 1px solid rgb(85, 182, 85);
+    border-radius: 5px;
+    cursor:pointer;
+}
