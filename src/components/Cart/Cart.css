@@ -1,0 +1,8 @@
+.mainButton {
+  background-color: gold;
+  height: 30px;
+  width: 200px;
+  border: 1px solid rgb(85, 182, 85);
+  border-radius: 5px;
+  cursor: pointer;
+}

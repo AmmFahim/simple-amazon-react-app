@@ -1,8 +1,10 @@
 import React from 'react';
+import "./Cart.css";
 
 const Cart = (props) => {
     const rcvCart = props.sendCart;
-    const totalPrice = rcvCart.reduce((total,product)=> total+product.price, 0);
+
+    const totalPrice = rcvCart.reduce((total,product)=> total+product.price * product.quantity, 0);
     let shipping = 0.00;
     if(totalPrice >35){
         shipping = 0.00;
@@ -23,6 +25,9 @@ const Cart = (props) => {
             <p><small>Shipping Cost:{shipping}</small></p>
             <p><small>Tax/Vat:{tax}</small></p>
             <h1>Total: {grandTotalPrice}</h1>
+            <br/>
+            {props.children}
+
 
         </div>
     );

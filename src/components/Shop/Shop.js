@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import fakeData from '../../fakeData/products'
+import { addToDatabaseCart, getDatabaseCart } from '../../utilities/databaseManager';
 import Cart from '../Cart/Cart';
 import Product from '../Product/Product';
-import './Shop.css'
+import './Shop.css';
+import { Link } from 'react-router-dom';
 
 
 
@@ -10,24 +12,52 @@ import './Shop.css'
 
 const Shop = () => {
 
+
 const first10 = fakeData.slice(0, 10);
 const [products,setProducts] = useState(first10);
 const [cart,setCart] = useState([]);
-const addButtonHandle =(sendProduct) =>{
-    // console.log('Product Added',sendProduct);
-    const newCart = [...cart,sendProduct];
+
+useEffect (() => {
+    const savedCart = getDatabaseCart();
+    const productKey = Object.keys(savedCart);
+    const previousCart = productKey.map( existingKey => {
+        const product = fakeData.find(pd => pd.key === existingKey);
+        product.quantity = savedCart[existingKey];
+        return product;
+    })
+    setCart(previousCart);
+},[])
+
+const handleAddedProduct = (product) =>{
+    const toBeAddedKey = product.key;
+    const sameProduct = cart.find(pd => pd.key === toBeAddedKey);
+    let count = 1;
+    let newCart;
+    if(sameProduct){
+        count = sameProduct.quantity + 1;
+        sameProduct.quantity = count;
+        const others = cart.filter(pd => pd.key !== toBeAddedKey);
+        newCart = [...others, sameProduct];
+    }
+    else{
+        product.quantity = 1;
+        newCart = [...cart, product];
+    }
     setCart(newCart);
-    
-    
+    addToDatabaseCart(product.key, count);
+
 }
+
     return (
         <div class = "shop-container">
             <div className="product-container">
-                <h1>Here Have :{products.length}</h1>
+                {/* <h1>Here Have :{products.length}</h1> */}
                 {
                     
                     products.map(p =><Product 
-                        sendHandleButton = {addButtonHandle}
+                        key = {p.key}
+                        showAddToCart = {true}
+                        sendHandleButton = {handleAddedProduct}
                         sendProduct= {p}
                         > </Product>)
                 }
@@ -35,7 +65,11 @@ const addButtonHandle =(sendProduct) =>{
             </div>
             <div className="cart-container">
 
-                <Cart sendCart={cart}></Cart>
+                <Cart sendCart={cart}>
+                            <Link to="/review">
+                            <button className="mainButton" >Review Order</button>
+                            </Link>
+                </Cart>
 
             </div>
 
